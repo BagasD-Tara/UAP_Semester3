@@ -12,5 +12,8 @@ module org.example.uap_pemlan {
     requires com.almasb.fxgl.all;
 
     opens org.example.uap_pemlan to javafx.fxml;
+    opens com.tiketbioskop.Controller to javafx.fxml;
+    opens com.tiketbioskop.main to javafx.graphics;
+
     exports org.example.uap_pemlan;
 }
