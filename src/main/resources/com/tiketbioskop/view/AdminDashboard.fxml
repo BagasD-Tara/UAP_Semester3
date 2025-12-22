@@ -10,7 +10,7 @@
     <VBox alignment="TOP_CENTER" layoutX="77.0" layoutY="80.0" prefHeight="192.0" prefWidth="347.0" spacing="15">
 
         <Label fx:id="welcomeLabel" style="-fx-font-size: 16px;" />
-   
+
         <Button contentDisplay="CENTER" onAction="#handleAddFilm" prefHeight="17.0" prefWidth="253.0" text="Tambah Film" />
 
         <Button onAction="#handleFilmList" prefWidth="200" text="Lihat Daftar Film" />
