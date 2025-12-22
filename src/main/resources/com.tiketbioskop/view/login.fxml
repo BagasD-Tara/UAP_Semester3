@@ -6,6 +6,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane  >
+<AnchorPane  prefWidth="400" prefHeight="300"
+             xmlns:fx="http://javafx.com/fxml"
+             fx:controller="com.tiketbioskop.Controller.LoginController">
 
+    <VBox spacing="10" layoutX="100" layoutY="60">
+        <Label text="LOGIN SISTEM TIKET" />
+
+        <TextField fx:id="usernameField" promptText="Username"/>
+        <PasswordField fx:id="passwordField" promptText="Password"/>
+
+        <Button text="Login" onAction="#handleLogin"/>
+    </VBox>
 </AnchorPane>
