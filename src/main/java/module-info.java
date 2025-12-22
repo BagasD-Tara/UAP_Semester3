@@ -10,6 +10,7 @@ module org.example.uap_pemlan {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires org.apache.poi.poi;
 
     opens org.example.uap_pemlan to javafx.fxml;
     opens com.tiketbioskop.Controller to javafx.fxml;

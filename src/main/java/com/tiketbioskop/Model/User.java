@@ -3,12 +3,14 @@ package com.tiketbioskop.Model;
 public class User {
     private String username;
     private String password;
-    private String role; // admin / buyer
+    private String role;
+    private String nama;
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, String role, String nama) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.nama = nama;
     }
 
     public String getUsername() {
@@ -21,5 +23,9 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public String getNama() {
+        return nama;
     }
 }
