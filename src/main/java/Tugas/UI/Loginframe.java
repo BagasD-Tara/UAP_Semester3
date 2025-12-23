@@ -16,7 +16,7 @@ public class Loginframe extends JFrame{
 
         // ===== BACKGROUND PANEL =====
         BackgroundPanel bgPanel =
-                new BackgroundPanel("C:\\Users\\W10\\IdeaProjects\\BackgroundTugaws.jpg");
+                new BackgroundPanel("C:\\Users\\MSi\\IdeaProjects\\gambarbagus.jpeg");
         bgPanel.setLayout(new GridBagLayout());
         setContentPane(bgPanel);
 

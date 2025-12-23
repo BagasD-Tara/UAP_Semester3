@@ -10,6 +10,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class MenuFrame extends JFrame {
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
     // ===== DATA =====
     private ArrayList<Film> listFilm = new ArrayList<>();
     private ArrayList<Penonton> listPenonton = new ArrayList<>();
@@ -41,9 +44,25 @@ public class MenuFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        mainPanel.add(panelMenuUtama(), "MENU");
+        mainPanel.add(panelPilihKursi(), "KURSI");
+        mainPanel.add(panelSukses(), "SUKSES");
+
+        add(mainPanel);
+        setVisible(true);
+    }
+
+
+    // ================= PANEL =================
+
+
+    private JPanel panelMenuUtama() {
+        JPanel panel = new JPanel(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
-
 
         tabbedPane.addTab("Data Film", panelDataFilm());
         tabbedPane.addTab("Data Penonton", panelDataPenonton());
@@ -53,17 +72,58 @@ public class MenuFrame extends JFrame {
         tabbedPane.addTab("Tambah Penonton", panelTambahPenonton());
         tabbedPane.addTab("Hapus Penonton", panelHapusPenonton());
 
-        add(tabbedPane);
+        JButton btnPesan = new JButton("Pesan Tiket");
+        btnPesan.addActionListener(e ->
+                cardLayout.show(mainPanel, "KURSI")
+        );
 
-        loadDummyFilm();
-        loadDummyPenonton();
-        refreshComboFilm();
-        refreshComboPenonton();
+        panel.add(tabbedPane, BorderLayout.CENTER);
+        panel.add(btnPesan, BorderLayout.SOUTH);
 
-        setVisible(true);
+        return panel;
     }
 
-    // ================= PANEL =================
+    private JPanel panelPilihKursi() {
+        JPanel panel = new JPanel(new GridLayout(4, 4, 10, 10));
+        panel.setBorder(BorderFactory.createTitledBorder("Pilih Kursi Anda"));
+
+        JButton[] kursi = new JButton[12];
+
+        for (int i = 0; i < kursi.length; i++) {
+            int nomor = i + 1;
+            kursi[i] = new JButton("Kursi " + nomor);
+
+            kursi[i].addActionListener(e -> {
+                JOptionPane.showMessageDialog(this,
+                        "Kursi " + nomor + " dipilih");
+                cardLayout.show(mainPanel, "SUKSES");
+            });
+
+            panel.add(kursi[i]);
+        }
+
+        return panel;
+    }
+
+    private JPanel panelSukses() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JLabel lbl = new JLabel(
+                "🎉 SUKSES! KURSI BERHASIL DIPESAN 🎉",
+                SwingConstants.CENTER
+        );
+        lbl.setFont(new Font("Arial", Font.BOLD, 22));
+
+        JButton btnKembali = new JButton("Kembali ke Menu");
+        btnKembali.addActionListener(e ->
+                cardLayout.show(mainPanel, "MENU")
+        );
+
+        panel.add(lbl, BorderLayout.CENTER);
+        panel.add(btnKembali, BorderLayout.SOUTH);
+
+        return panel;
+    }
 
 
     private JPanel panelDataFilm() {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="350" prefWidth="500" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tiketbioskop.Controller.AdminDashboardController">
+
+    <VBox alignment="TOP_CENTER" layoutX="77.0" layoutY="80.0" prefHeight="192.0" prefWidth="347.0" spacing="15">
+
+        <Label fx:id="welcomeLabel" style="-fx-font-size: 16px;" />
+   
+        <Button contentDisplay="CENTER" onAction="#handleAddFilm" prefHeight="17.0" prefWidth="253.0" text="Tambah Film" />
+
+        <Button onAction="#handleFilmList" prefWidth="200" text="Lihat Daftar Film" />
+
+        <Button onAction="#handleLogout" prefWidth="200" text="Logout" />
+    </VBox>
+</AnchorPane>
