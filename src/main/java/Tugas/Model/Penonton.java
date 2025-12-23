@@ -1,6 +1,11 @@
+// java
 package Tugas.Model;
 
-public class Penonton {
+import java.io.Serializable;
+
+public class Penonton implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String nama;
     private String judulFilm;
     private String jadwal;

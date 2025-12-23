@@ -1,6 +1,11 @@
+// java
 package Tugas.Model;
 
-public class Film {
+import java.io.Serializable;
+
+public class Film implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String judul;
     private String studio;
     private String jadwal;

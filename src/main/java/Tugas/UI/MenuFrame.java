@@ -1,13 +1,18 @@
+// java
 package Tugas.UI;
 
 import Tugas.Model.Film;
 import Tugas.Model.Penonton;
+import Tugas.utill.Storage;
 import Tugas.utill.validator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuFrame extends JFrame {
     // ===== DATA =====
@@ -41,9 +46,7 @@ public class MenuFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
         JTabbedPane tabbedPane = new JTabbedPane();
-
 
         tabbedPane.addTab("Data Film", panelDataFilm());
         tabbedPane.addTab("Data Penonton", panelDataPenonton());
@@ -55,16 +58,39 @@ public class MenuFrame extends JFrame {
 
         add(tabbedPane);
 
-        loadDummyFilm();
-        loadDummyPenonton();
+        // load from storage; fallback to dummy if empty
+        List<Film> loadedFilms = Storage.loadFilms();
+        if (loadedFilms.isEmpty()) {
+            loadDummyFilm();
+        } else {
+            listFilm.addAll(loadedFilms);
+            refreshFilmTable();
+        }
+
+        List<Penonton> loadedPenonton = Storage.loadPenonton();
+        if (loadedPenonton.isEmpty()) {
+            loadDummyPenonton();
+        } else {
+            listPenonton.addAll(loadedPenonton);
+            refreshPenontonTable();
+        }
+
         refreshComboFilm();
         refreshComboPenonton();
+
+        // save on close
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Storage.saveFilms(listFilm);
+                Storage.savePenonton(listPenonton);
+            }
+        });
 
         setVisible(true);
     }
 
     // ================= PANEL =================
-
 
     private JPanel panelDataFilm() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -74,7 +100,6 @@ public class MenuFrame extends JFrame {
         return panel;
     }
 
-
     private JPanel panelDataPenonton() {
         JPanel panel = new JPanel(new BorderLayout());
         penontonModel = new DefaultTableModel(new String[]{"Nama", "Film", "Jadwal"}, 0);
@@ -83,11 +108,9 @@ public class MenuFrame extends JFrame {
         return panel;
     }
 
-
     private JPanel panelTambahFilm() {
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Tambah Film"));
-
 
         txtJudul = new JTextField();
         txtStudio = new JTextField();
@@ -95,20 +118,17 @@ public class MenuFrame extends JFrame {
         cbJadwal = new JComboBox<>(new String[]{"10:00", "13:00", "16:00", "19:00"});
         JButton btnTambah = new JButton("Tambah Film");
 
-
         panel.add(new JLabel("Judul Film")); panel.add(txtJudul);
         panel.add(new JLabel("Studio")); panel.add(txtStudio);
         panel.add(new JLabel("Jadwal")); panel.add(cbJadwal);
         panel.add(new JLabel("Harga")); panel.add(txtHarga);
         panel.add(new JLabel()); panel.add(btnTambah);
 
-
         btnTambah.addActionListener(e -> tambahFilm());
         return panel;
     }
 
     private JPanel panelUpdateFilm() {
-
         JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Update Film"));
 
@@ -146,11 +166,9 @@ public class MenuFrame extends JFrame {
         cbDeleteFilm = new JComboBox<>();
         JButton btnHapus = new JButton("Hapus Film");
 
-
         panel.add(new JLabel("Pilih Film"));
         panel.add(cbDeleteFilm);
         panel.add(btnHapus);
-
 
         btnHapus.addActionListener(e -> {
             int index = cbDeleteFilm.getSelectedIndex();
@@ -168,9 +186,10 @@ public class MenuFrame extends JFrame {
 
             if (confirm == JOptionPane.YES_OPTION) {
                 // remove film
+                String removedTitle = cbDeleteFilm.getItemAt(index);
                 listFilm.remove(index);
-                //sekalian remove penonton yang nonton film itu
-                listPenonton.removeIf(p -> p.getJudulFilm().equals(cbDeleteFilm.getItemAt(index)));
+                // remove penonton yang nonton film itu
+                listPenonton.removeIf(p -> p.getJudulFilm().equals(removedTitle));
                 refreshFilmTable();
                 refreshComboFilm();
                 refreshPenontonTable();
@@ -183,7 +202,6 @@ public class MenuFrame extends JFrame {
     }
 
     private JPanel panelTambahPenonton() {
-
         JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Tambah Penonton"));
 
@@ -215,7 +233,6 @@ public class MenuFrame extends JFrame {
     }
 
     private JPanel panelHapusPenonton() {
-
         JPanel panel = new JPanel(new FlowLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Hapus Penonton"));
 
@@ -254,15 +271,12 @@ public class MenuFrame extends JFrame {
         return panel;
     }
 
-
     // ================= LOGIC =================
-
 
     private void tambahFilm() {
         if (!validator.required(txtJudul, "Judul Film", this)) return;
         if (!validator.required(txtStudio, "Studio", this)) return;
         if (!validator.required(txtHarga, "Harga", this)) return;
-
 
         Film film = new Film(txtJudul.getText(), txtStudio.getText(), cbJadwal.getSelectedItem().toString(), txtHarga.getText());
         listFilm.add(film);
@@ -271,7 +285,6 @@ public class MenuFrame extends JFrame {
     }
 
     private void updateFilm() {
-
         int index = cbUpdateFilm.getSelectedIndex();
         if (index < 0) {
             JOptionPane.showMessageDialog(this, "Pilih film terlebih dahulu");
@@ -298,7 +311,6 @@ public class MenuFrame extends JFrame {
         refreshFilmTable();
     }
 
-
     private void loadDummyPenonton() {
         listPenonton.add(new Penonton("Budi", "Interstellar", "13:00"));
         listPenonton.add(new Penonton("Siti", "Avengers", "16:00"));
@@ -322,14 +334,12 @@ public class MenuFrame extends JFrame {
         }
     }
 
-
     private void refreshPenontonTable() {
         penontonModel.setRowCount(0);
         for (Penonton p : listPenonton) {
             penontonModel.addRow(new Object[]{p.getNama(), p.getJudulFilm(), p.getJadwal()});
         }
     }
-
 
     private void refreshComboFilm() {
         if (cbUpdateFilm != null) {
@@ -342,6 +352,7 @@ public class MenuFrame extends JFrame {
             refreshComboFilm(cbDeleteFilm);
         }
     }
+
     private void refreshComboFilm(JComboBox<String> combo) {
         combo.removeAllItems();
         for (Film f : listFilm) {
@@ -351,7 +362,6 @@ public class MenuFrame extends JFrame {
     }
 
     private void tambahPenonton() {
-
         if (!validator.required(txtNamaPenonton, "Nama Penonton", this)) return;
 
         if (cbFilmPenonton.getItemCount() == 0) {
@@ -393,5 +403,4 @@ public class MenuFrame extends JFrame {
             refreshComboPenonton(cbDeletePenonton);
         }
     }
-
 }
